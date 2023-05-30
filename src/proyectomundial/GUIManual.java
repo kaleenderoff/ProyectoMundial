@@ -24,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import proyectomundial.DAO.DashResultadosDAO;
 import proyectomundial.DAO.DashSeleccionesDAO;
 import proyectomundial.DAO.ResultadoDAO;
 import proyectomundial.DAO.SeleccionDAO;
@@ -35,8 +36,9 @@ public class GUIManual extends JFrame {
     SeleccionDAO seleccionDAO = new SeleccionDAO();
     ResultadoDAO resultadoDAO = new ResultadoDAO();
     DashSeleccionesDAO dashSeleccionesDAO = new DashSeleccionesDAO();
+    DashResultadosDAO dashResultadoDAO = new DashResultadosDAO();
 
-    // Matrix que permite almancenar la información de las selecciones futbol cargadas
+    // Matriz que permite almancenar la información de las selecciones futbol cargadas
     public String[][] matrizSelecciones = null;
 
     // Matriz que permite almacenar los resultados de los partidos cargardos
@@ -44,13 +46,13 @@ public class GUIManual extends JFrame {
 
     // Matriz cantidad de selecciones por continente
     public String[][] matrizSeleccionesContinente = null;
-    
+
     // Matriz cantidad nacionalidades directores tecnicos
     public String[][] matrizNacionalidadesTecnicos = null;
-    
+
     // Matriz ranking nacionalidades directores tecnicos
     public String[][] matrizRankingNacionalidades = null;
-    
+
     // Elementos de bara Lateral
     private JPanel jPanelLeft;
 
@@ -392,16 +394,6 @@ public class GUIManual extends JFrame {
         matrizNacionalidadesTecnicos = dashSeleccionesDAO.getCantidadNacionalidadesTecnicosMatriz();
         matrizRankingNacionalidades = dashSeleccionesDAO.getRankingNacionalidadesMatriz();
 
-        /*
-        JTextArea a = new JTextArea();
-        a.setText("En esta sección, teniendo en cuenta los datos que fueron cargados en la matriz de selecciones \n"
-                + "se deben mostrar los siguientes datos:\n\n"
-                + "1. Total de selecciones Cargadas \n"
-                + "2. Número de selecciones por continente (Se puede usar una tabla para pintar esto) \n"
-                + "3. Cantidad de nacionalidades diferentes de los directores técnicos \n"
-                + "4. Ranking de nacionalidades de directores técnicos \n\n"
-                + "Utilice los diferentes componentes gráficos para construir un dashboard lo más estético posible");
-         */
         pintarDashSelecciones();
     }
 
@@ -441,24 +433,9 @@ public class GUIManual extends JFrame {
      */
     private void accionDashboardRes() {
 
-        JTextArea a = new JTextArea();
-        a.setText("En esta sección, teniendo en cuenta los datos que fueron cargados en la matriz de resultados \n"
-                + "se deben mostrar los siguientes datos:\n\n"
-                + "1. Número de partidos cargados \n"
-                + "2. Promedio de goles por partido \n"
-                + "3. Partido con más goles y partido con menos goles \n"
-                + "4. Número de partidos dónde hubo un ganador y número de partidos dónde hubo empate \n"
-                + "5. Selcción o selecciones con más goles y con menos goles \n"
-                + "6. Selección con más puntos y menos puntos \n"
-                + "7. Continente o continentes con más goles y menos goles \n"
-                + "8. Clasificados por cada grupo (Clasifican los dos primeros equipos de cada grupo) \n\n"
-                + "Utilice los diferentes componentes gráficos para construir un dashboard lo más estético posible");
+        jLabelTop.setText("Dash resultados");
 
-        jPanelMain.removeAll();
-        jPanelMain.add(a);
-
-        jPanelMain.repaint();
-        jPanelMain.revalidate();
+        pintarDashResultados();
     }
 
     /**
@@ -724,22 +701,90 @@ public class GUIManual extends JFrame {
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
         panelPrincipal.setPreferredSize((new java.awt.Dimension(620, 410)));
         panelPrincipal.setMaximumSize(jPanelRight.getPreferredSize());
-        
+
         // 1. Total de selecciones cargadas
         JLabel lblSeleccionesCargadas = new JLabel();
         lblSeleccionesCargadas.setText("1. Total de selecciones cargadas: " + dashSeleccionesDAO.totalSeleccionesCargadas());
         panelPrincipal.add(lblSeleccionesCargadas);
-        
+
         // 2. Numero de selecciones por continente
         JLabel lblSeleccionesContinente = new JLabel();
         lblSeleccionesContinente.setText("2. Numero de selecciones por continente (Tabla).");
         panelPrincipal.add(lblSeleccionesContinente);
-        
+
         String[] columnNamesA = {"Continente", "Cantidad Selecciones"};
         JTable tableA = new JTable(matrizSeleccionesContinente, columnNamesA);
         tableA.setRowHeight(30);
+
+        JPanel seleccionesporContinentePanel = new JPanel();
+        seleccionesporContinentePanel.setLayout(new BoxLayout(seleccionesporContinentePanel, BoxLayout.Y_AXIS));
+        seleccionesporContinentePanel.setPreferredSize((new java.awt.Dimension(620, 410)));
+        seleccionesporContinentePanel.setMaximumSize(jPanelRight.getPreferredSize());
+
+        JScrollPane scrollPaneA = new JScrollPane(tableA);
+        panelPrincipal.add(seleccionesporContinentePanel.add(scrollPaneA));
+
+        // 3. Cantidad de nacionalidades diferentes de directores tecnicos
+        JLabel lblNacionalidadTecnicos = new JLabel();
+        lblNacionalidadTecnicos.setText("3. Cantidad de nacionalidades diferentes de los directores tecnicos (Tabla).");
+        panelPrincipal.add(lblNacionalidadTecnicos);
+
+        String[] columnNamesB = {"Nacionalidad", "Cantidad Directores Tecnicos"};
+        JTable tableB = new JTable(matrizNacionalidadesTecnicos, columnNamesB);
+        tableB.setRowHeight(30);
+
+        JPanel cantidadNacionalidadTecnicosPanel = new JPanel();
+        cantidadNacionalidadTecnicosPanel.setLayout(new BoxLayout(cantidadNacionalidadTecnicosPanel, BoxLayout.Y_AXIS));
+        cantidadNacionalidadTecnicosPanel.setPreferredSize((new java.awt.Dimension(620, 410)));
+        cantidadNacionalidadTecnicosPanel.setMaximumSize(jPanelRight.getPreferredSize());
+
+        JScrollPane scrollPaneB = new JScrollPane(tableB);
+        panelPrincipal.add(cantidadNacionalidadTecnicosPanel.add(scrollPaneB));
+
+        // 4. Ranking de nacionalidades de directores tecnicos
+        JLabel lblRanking = new JLabel();
+        lblRanking.setText("4. Ranking de nacionalidades de directores tecnicos (Tabla).");
+        panelPrincipal.add(lblRanking);
+
+        String[] columnNamesC = {"Ranking", "Nacionalidad", "Cantidad Directores Tecnicos"};
+        JTable tableC = new JTable(matrizRankingNacionalidades, columnNamesC);
+        tableC.setRowHeight(30);
+
+        JPanel rankingNacionalidadesPanel = new JPanel();
+        rankingNacionalidadesPanel.setLayout(new BoxLayout(rankingNacionalidadesPanel, BoxLayout.Y_AXIS));
+        rankingNacionalidadesPanel.setPreferredSize((new java.awt.Dimension(620, 410)));
+        rankingNacionalidadesPanel.setMaximumSize(jPanelRight.getPreferredSize());
+
+        JScrollPane scrollPaneC = new JScrollPane(tableC);
+        panelPrincipal.add(rankingNacionalidadesPanel.add(scrollPaneC));
+
+        jPanelMain.removeAll();
+        jPanelMain.add(panelPrincipal, BorderLayout.PAGE_START);
+        jPanelMain.repaint();
+        jPanelMain.revalidate();
+    }
+
+    public void pintarDashResultados() {
+        JPanel panelPrincipal = new JPanel();
+        panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
+        panelPrincipal.setPreferredSize((new java.awt.Dimension(620, 410)));
+        panelPrincipal.setMaximumSize(jPanelRight.getPreferredSize());
         
-        JPanel seleccionesporContinentePanel = new JPanel(); 
+        // 1. Numero de partidos cargados
+        JLabel lblNumeroPartidosCargados = new JLabel();
+        lblNumeroPartidosCargados.setText("1. Numero de partidos cargados: " + dashResultadoDAO.numeroPartidosCargados());
+        panelPrincipal.add(lblNumeroPartidosCargados);
+        
+        // 2. Promedio de goles por partido
+        JLabel lblPromedioGolesPorPartido = new JLabel();
+        lblPromedioGolesPorPartido.setText("2. Promedio de goles por partido (Tabla).");
+        panelPrincipal.add(lblPromedioGolesPorPartido);
+
+        String[] columnNamesA = {"Partido", "Promedio de goles"};
+        JTable tableA = new JTable(matrizSeleccionesContinente, columnNamesA);
+        tableA.setRowHeight(30);
+
+        JPanel seleccionesporContinentePanel = new JPanel();
         seleccionesporContinentePanel.setLayout(new BoxLayout(seleccionesporContinentePanel, BoxLayout.Y_AXIS));
         seleccionesporContinentePanel.setPreferredSize((new java.awt.Dimension(620, 410)));
         seleccionesporContinentePanel.setMaximumSize(jPanelRight.getPreferredSize());
@@ -747,40 +792,6 @@ public class GUIManual extends JFrame {
         JScrollPane scrollPaneA = new JScrollPane(tableA);
         panelPrincipal.add(seleccionesporContinentePanel.add(scrollPaneA));
         
-        // 3. Cantidad de nacionalidades diferentes de directores tecnicos
-        JLabel lblNacionalidadTecnicos = new JLabel();
-        lblNacionalidadTecnicos.setText("3. Cantidad de nacionalidades diferentes de los directores tecnicos (Tabla).");
-        panelPrincipal.add(lblNacionalidadTecnicos);
-        
-        String[] columnNamesB = {"Nacionalidad", "Cantidad Directores Tecnicos"};
-        JTable tableB = new JTable(matrizNacionalidadesTecnicos, columnNamesB);
-        tableB.setRowHeight(30);
-        
-        JPanel cantidadNacionalidadTecnicosPanel = new JPanel(); 
-        cantidadNacionalidadTecnicosPanel.setLayout(new BoxLayout(cantidadNacionalidadTecnicosPanel, BoxLayout.Y_AXIS));
-        cantidadNacionalidadTecnicosPanel.setPreferredSize((new java.awt.Dimension(620, 410)));
-        cantidadNacionalidadTecnicosPanel.setMaximumSize(jPanelRight.getPreferredSize());
-
-        JScrollPane scrollPaneB = new JScrollPane(tableB);
-        panelPrincipal.add(cantidadNacionalidadTecnicosPanel.add(scrollPaneB));
-        
-        // 4. Ranking de nacionalidades de directores tecnicos
-        JLabel lblRanking = new JLabel();
-        lblRanking.setText("4. Ranking de nacionalidades de directores tecnicos (Tabla).");
-        panelPrincipal.add(lblRanking);
-        
-        String[] columnNamesC = {"Ranking", "Nacionalidad", "Cantidad Directores Tecnicos"};
-        JTable tableC = new JTable(matrizRankingNacionalidades, columnNamesC);
-        tableC.setRowHeight(30);
-        
-        JPanel rankingNacionalidadesPanel = new JPanel(); 
-        rankingNacionalidadesPanel.setLayout(new BoxLayout(rankingNacionalidadesPanel, BoxLayout.Y_AXIS));
-        rankingNacionalidadesPanel.setPreferredSize((new java.awt.Dimension(620, 410)));
-        rankingNacionalidadesPanel.setMaximumSize(jPanelRight.getPreferredSize());
-        
-        JScrollPane scrollPaneC = new JScrollPane(tableC);
-        panelPrincipal.add(rankingNacionalidadesPanel.add(scrollPaneC));
-
         jPanelMain.removeAll();
         jPanelMain.add(panelPrincipal, BorderLayout.PAGE_START);
         jPanelMain.repaint();
