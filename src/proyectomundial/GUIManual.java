@@ -777,20 +777,8 @@ public class GUIManual extends JFrame {
         
         // 2. Promedio de goles por partido
         JLabel lblPromedioGolesPorPartido = new JLabel();
-        lblPromedioGolesPorPartido.setText("2. Promedio de goles por partido (Tabla).");
+        lblPromedioGolesPorPartido.setText("2. Promedio de goles por partido: " + dashResultadoDAO.promedioGolesPorPartido());
         panelPrincipal.add(lblPromedioGolesPorPartido);
-
-        String[] columnNamesA = {"Partido", "Promedio de goles"};
-        JTable tableA = new JTable(matrizSeleccionesContinente, columnNamesA);
-        tableA.setRowHeight(30);
-
-        JPanel seleccionesporContinentePanel = new JPanel();
-        seleccionesporContinentePanel.setLayout(new BoxLayout(seleccionesporContinentePanel, BoxLayout.Y_AXIS));
-        seleccionesporContinentePanel.setPreferredSize((new java.awt.Dimension(620, 410)));
-        seleccionesporContinentePanel.setMaximumSize(jPanelRight.getPreferredSize());
-
-        JScrollPane scrollPaneA = new JScrollPane(tableA);
-        panelPrincipal.add(seleccionesporContinentePanel.add(scrollPaneA));
         
         jPanelMain.removeAll();
         jPanelMain.add(panelPrincipal, BorderLayout.PAGE_START);
