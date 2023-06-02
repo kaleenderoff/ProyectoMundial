@@ -438,7 +438,7 @@ public class GUIManual extends JFrame {
      * información de los paneles
      */
     private void accionDashboardRes() {
-        jLabelTop.setText("Dash resultados");
+        jLabelTop.setText("Dash Resultados");
         matrizPartidosConMenosGoles = dashResultadoDAO.getPartidosConMenosGolesMatriz();
         matrizPartidosConMasGoles = dashResultadoDAO.getPartidosConMasGolesMatriz();
 
