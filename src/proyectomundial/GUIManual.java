@@ -53,6 +53,12 @@ public class GUIManual extends JFrame {
     // Matriz ranking nacionalidades directores tecnicos
     public String[][] matrizRankingNacionalidades = null;
 
+    // Matriz partidos con menos goles
+    public String[][] matrizPartidosConMenosGoles = null;
+
+    // Matriz partidos con mas goles
+    public String[][] matrizPartidosConMasGoles = null;
+
     // Elementos de bara Lateral
     private JPanel jPanelLeft;
 
@@ -432,8 +438,9 @@ public class GUIManual extends JFrame {
      * información de los paneles
      */
     private void accionDashboardRes() {
-
         jLabelTop.setText("Dash resultados");
+        matrizPartidosConMenosGoles = dashResultadoDAO.getPartidosConMenosGolesMatriz();
+        matrizPartidosConMasGoles = dashResultadoDAO.getPartidosConMasGolesMatriz();
 
         pintarDashResultados();
     }
@@ -769,17 +776,51 @@ public class GUIManual extends JFrame {
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
         panelPrincipal.setPreferredSize((new java.awt.Dimension(620, 410)));
         panelPrincipal.setMaximumSize(jPanelRight.getPreferredSize());
-        
+
         // 1. Numero de partidos cargados
         JLabel lblNumeroPartidosCargados = new JLabel();
         lblNumeroPartidosCargados.setText("1. Numero de partidos cargados: " + dashResultadoDAO.numeroPartidosCargados());
         panelPrincipal.add(lblNumeroPartidosCargados);
-        
+
         // 2. Promedio de goles por partido
         JLabel lblPromedioGolesPorPartido = new JLabel();
         lblPromedioGolesPorPartido.setText("2. Promedio de goles por partido: " + dashResultadoDAO.promedioGolesPorPartido());
         panelPrincipal.add(lblPromedioGolesPorPartido);
-        
+
+        // 3. Partidos con menos goles
+        JLabel lblPartidosConMenosGoles = new JLabel();
+        lblPartidosConMenosGoles.setText("3. Partidos con menos goles (Tabla).");
+        panelPrincipal.add(lblPartidosConMenosGoles);
+
+        String[] columnNamesA = {"Nacionalidad", "Cantidad Directores Tecnicos"};
+        JTable tableA = new JTable(matrizPartidosConMenosGoles, columnNamesA);
+        tableA.setRowHeight(30);
+
+        JPanel partidosConMenosGolesPanel = new JPanel();
+        partidosConMenosGolesPanel.setLayout(new BoxLayout(partidosConMenosGolesPanel, BoxLayout.Y_AXIS));
+        partidosConMenosGolesPanel.setPreferredSize((new java.awt.Dimension(620, 410)));
+        partidosConMenosGolesPanel.setMaximumSize(jPanelRight.getPreferredSize());
+
+        JScrollPane scrollPaneA = new JScrollPane(tableA);
+        panelPrincipal.add(partidosConMenosGolesPanel.add(scrollPaneA));
+
+        // 4. Partidos con mas goles
+        JLabel lblPartidosConMasGoles = new JLabel();
+        lblPartidosConMasGoles.setText("4. Partidos con mas goles (Tabla).");
+        panelPrincipal.add(lblPartidosConMasGoles);
+
+        String[] columnNamesB = {"Partidos", "Cantidad goles"};
+        JTable tableB = new JTable(matrizPartidosConMasGoles, columnNamesB);
+        tableB.setRowHeight(30);
+
+        JPanel partidosConMasGolesPanel = new JPanel();
+        partidosConMasGolesPanel.setLayout(new BoxLayout(partidosConMasGolesPanel, BoxLayout.Y_AXIS));
+        partidosConMasGolesPanel.setPreferredSize((new java.awt.Dimension(620, 410)));
+        partidosConMasGolesPanel.setMaximumSize(jPanelRight.getPreferredSize());
+
+        JScrollPane scrollPaneB = new JScrollPane(tableB);
+        panelPrincipal.add(partidosConMasGolesPanel.add(scrollPaneB));
+
         jPanelMain.removeAll();
         jPanelMain.add(panelPrincipal, BorderLayout.PAGE_START);
         jPanelMain.repaint();
